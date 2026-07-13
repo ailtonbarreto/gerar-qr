@@ -2,6 +2,8 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="./favicon.png" type="image/x-icon">
   <title>Gerador de QR Code</title>
   <style>
     body {
@@ -55,6 +57,10 @@
       cursor: pointer;
     }
 
+    #download-btn{
+      background-color: rgb(6, 180, 122);
+    }
+
     button:hover {
       background: #005fa3;
     }
@@ -80,13 +86,15 @@
     <h1>Gerador de QR Code</h1>
 
     <label for="texto">Texto ou URL:</label>
-    <input type="text" id="texto" placeholder="Digite aqui..." />
+    <input type="text" id="texto" placeholder="Digite aqui e clique em Gerar QR Code" />
 
-    <button onclick="gerarQR()">Gerar QR Code</button>
+    <button id="generate-btn" onclick="gerarQR()">Gerar QR Code</button>
+    
 
     <div id="qr-container">
-      <p class="msg">O QR aparecerá aqui depois que você clicar em "Gerar".</p>
+      
       <img id="qr-image" src="" alt="QR Code" style="display:none;">
+      <button id="download-btn" style="display:none; margin-top:10px;" onclick="downloadQR()">Baixar QR Code</button>
     </div>
   </div>
 
@@ -94,6 +102,7 @@
     function gerarQR() {
       const texto = document.getElementById('texto').value.trim();
       const img = document.getElementById('qr-image');
+      const downloadBtn = document.getElementById('download-btn');
 
       if (!texto) {
         alert('Digite algum texto ou URL para gerar o QR Code.');
@@ -104,6 +113,37 @@
 
       img.src = url;
       img.style.display = 'block';
+      if (downloadBtn) {
+        downloadBtn.style.display = 'inline-block';
+        downloadBtn.disabled = true;
+      }
+
+      img.onload = function() {
+        if (downloadBtn) downloadBtn.disabled = false;
+      };
+      const generateBtn = document.getElementById('generate-btn');
+      if (generateBtn) generateBtn.style.display = 'none';
+    }
+
+    async function downloadQR() {
+      const img = document.getElementById('qr-image');
+      if (!img || !img.src) return alert('Gere o QR Code antes de baixar.');
+
+      try {
+        const resp = await fetch(img.src);
+        if (!resp.ok) throw new Error('Erro ao baixar imagem');
+        const blob = await resp.blob();
+        const urlBlob = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = urlBlob;
+        a.download = 'qrcode.png';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(urlBlob);
+      } catch (e) {
+        alert('Não foi possível baixar o QR Code.');
+      }
     }
   </script>
 </body>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Gerador de QR Code</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      padding: 20px 25px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      background: #0078d4;
+      color: #fff;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #005fa3;
+    }
+
+    #qr-container {
+      margin-top: 15px;
+    }
+
+    #qr-container img {
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    .msg {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Gerador de QR Code</h1>
+
+    <label for="texto">Texto ou URL:</label>
+    <input type="text" id="texto" placeholder="Digite aqui..." />
+
+    <button onclick="gerarQR()">Gerar QR Code</button>
+
+    <div id="qr-container">
+      <p class="msg">O QR aparecerá aqui depois que você clicar em "Gerar".</p>
+      <img id="qr-image" src="" alt="QR Code" style="display:none;">
+    </div>
+  </div>
+
+  <script>
+    function gerarQR() {
+      const texto = document.getElementById('texto').value.trim();
+      const img = document.getElementById('qr-image');
+
+      if (!texto) {
+        alert('Digite algum texto ou URL para gerar o QR Code.');
+        return;
+      }
+
+      const url = 'https://quickchart.io/qr?text=' + encodeURIComponent(texto) + '&size=300';
+
+      img.src = url;
+      img.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
